@@ -1,0 +1,220 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+
+.discoveryTitle {
+  font-weight: bold !important;
+  font-family: "Raleway" !important;
+  font-size: 4rem;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.discoveryCaption {
+  font-weight: 600 !important;
+  font-family: "Raleway" !important;
+  font-size: 1.5rem;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  margin-block: 0.5rem 2rem;
+}
+
+.discoveryRoot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: auto;
+  padding: 1.5rem;
+  border-radius: 10px;
+  min-height: 70vh;
+}
+
+.discoveryGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  width: 100%;
+  margin: auto;
+  border-radius: 10px;
+  align-items: flex-start;
+  justify-items: flex-start;
+overflow:hidden;
+}
+
+.gridItem {
+  position: relative;
+  overflow: hidden;
+  height: min-content;
+  aspect-ratio: 1 / 1;
+
+}
+
+.discoveryGridImg {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  box-shadow: 1 2 4 3px rgba(0, 0, 0, 0.26);
+  border-radius: 5px;
+}
+
+.gridItem:hover .discoveryGridImg {
+  transform: scale(1.1);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.gridItem:hover .overlay {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  opacity: 0;
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlayTitle {
+  text-align: center;
+  padding: 10px;
+  font-size: 1.8rem;
+  font-family: "Raleway";
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+
+
+}
+
+.overlayCaption {
+  text-align: center;
+  padding: 10px;
+  font-size: 1.2rem;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  font-family: "Raleway";
+}
+
+.discoverySearch {
+  width: 100%;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  gap: 3rem;
+  margin-inline: auto;
+}
+
+.discoverySearch input {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  width: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  flex: 2;
+  outline: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.discoverySearch button {
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  font-family: "Raleway";
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 1rem;
+  flex: 0.5;
+  width: 10%;
+}
+
+/*.discoverySearch button:hover,
+.discoverySearch button:focus {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: #fff;
+}
+*/
+
+.discoverySearch button {
+  background-color: #f0f0f1;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
+}
+
+.discoverySearch input:focus {
+  outline: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.discoverySearch input::placeholder {
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .discoveryTitle {
+    font-size: 2rem;
+  }
+
+  .discoveryCaption {
+    font-size: 0.75rem;
+    margin-block: 0.5rem;
+  }
+
+  .discoveryRoot {
+    width: 90%;
+  }
+
+  .overlayTitle {
+    font-size: 1.5rem;
+  }
+
+  .overlayCaption {
+    font-size: 0.75rem;
+  }
+
+  .discoverySearch {
+    justify-content: center;
+    gap: 0.5rem;
+    width: 90%;
+  }
+
+  .discoverySearch input {
+    font-size: 0.75rem;
+    width: 100%;
+  }
+
+  .discoverySearch button {
+    font-size: 0.75rem;
+    justify-content: center;
+    align-self: flex-end;
+    width: auto;
+    padding: 0.5rem 0rem;
+    flex: 1.5;
+  }
+}
