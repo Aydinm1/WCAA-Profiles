@@ -41,6 +41,7 @@ Using a two-page template — **Grid Page** (discovery view) and **Inside Page**
 
 **Example:**  
 ![Inside Page Screenshot](images/inside.png)
+![Inside Page Screenshot](images/inside2.png)
 
 ### 4. Automated Content Pipeline
 - No manual HTML edits required — Airtable is the single source of truth.
