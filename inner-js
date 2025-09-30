@@ -1,0 +1,411 @@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const searchParams = new URLSearchParams(window.location.search);
+  const personId = parseInt(searchParams.get("person"));
+
+  const peopleTableName = "People";
+  const peopleTableView = "Website";
+  const adminTableName = "Jubile Festival Discovery Admin";
+  const adminTableView = "Grid view";
+
+  // Fetch the data from Airtable using the Airtable API
+ const fetchAirtableData = async (tableName, view) => {
+  const apiKey = "XXXXXXX";
+  const baseId = "XXXXXXX";
+  let allRecords = [];
+  let offset = null;
+
+  try {
+    do {
+      const url = new URL(`https://api.airtable.com/v0/${baseId}/${tableName}`);
+      url.searchParams.append("view", view);
+      if (offset) url.searchParams.append("offset", offset);
+
+      const response = await axios.get(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+
+      allRecords.push(...response.data.records);
+      offset = response.data.offset;
+    } while (offset);
+
+    return allRecords;
+  } catch (error) {
+    console.error("Error fetching Airtable data:", error);
+    return [];
+  }
+};
+
+ 
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  const buildBackButton = (pageRoot, fields) => {
+    const backButton = document.createElement("a");
+    backButton.style.color = "black";
+    backButton.style.alignSelf = "flex-end";
+    backButton.href =` https://theismaili.shorthandstories.com/notable-artists-and-athletes-discovery/`;
+    backButton.innerText = fields.PersonPageBackButtonText;
+    pageRoot.appendChild(backButton);
+  };
+
+  const buildHero = (pageRoot, fields) => {
+    const hero = document.createElement("div");
+    hero.className = "hero";
+
+    const left = document.createElement("div");
+    left.className = "left";
+
+    const h1 = document.createElement("h1");
+    h1.textContent = fields.Name;
+    left.appendChild(h1);
+    
+    const h4Category = document.createElement("h4");
+    h4Category.textContent = fields.Category;
+    left.appendChild(h4Category);
+
+    const h4Location = document.createElement("h4");
+    h4Location.textContent = `${fields.City}, ${fields["Country on Profile"]}`;
+    left.appendChild(h4Location);
+    
+
+    const socialMediaDrawer = document.createElement("div");
+    socialMediaDrawer.className = "socialMediaDrawer";
+
+    const socialMediaLinks = {
+      "26 - Facebook": "fa-brands fa-facebook",
+      "27 - LinkedIn": "fa-brands fa-linkedin",
+      "28 - Instagram": "fa-brands fa-instagram",
+      "29 - Youtube": "fa-brands fa-youtube",
+      "30 - Twitter": "fa-brands fa-x-twitter",
+      "25 - Website": "fa-solid fa-link",
+    };
+
+    Object.entries(socialMediaLinks).forEach(([socialMedia, className]) => {
+      const url = fields[socialMedia];
+      if (url) {
+        const link = document.createElement("a");
+        link.className = className;
+        link.href = url;
+        link.target = "_blank";
+        socialMediaDrawer.appendChild(link);
+      }
+    });
+
+    left.appendChild(socialMediaDrawer);
+    hero.appendChild(left);
+
+    const right = document.createElement("div");
+    right.className = "right";
+
+    const profilePicture = document.createElement("img");
+    profilePicture.src = fields["Profile Picture"][0].url;
+    right.appendChild(profilePicture);
+
+    hero.appendChild(right);
+    pageRoot.appendChild(hero);
+  };
+
+  const buildBioWithBoxes = (pageRoot, fields) => {
+    const container = document.createElement("div");
+    container.className = "bio-container";
+
+    const bioDiv = document.createElement("div");
+    bioDiv.className = "bio";
+    bioDiv.innerText = fields.Bio|| "No bio available";
+
+    const rightDiv = document.createElement("div");
+    rightDiv.className = "right-boxes";
+
+    // Country box
+    const countryBox = document.createElement("div");
+    countryBox.className = "box";
+    countryBox.innerText = `Country: ${fields.Current_Country || "N/A"}`;
+    rightDiv.appendChild(countryBox);
+
+    // Talent box
+    const talentBox = document.createElement("div");
+    talentBox.className = "box";
+if (fields.Talent_Type === "Athlete") {
+  talentBox.className = "box sport-box";
+  talentBox.innerText = `Sport: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Artist") {
+  talentBox.innerText = `Art Form: ${fields["06 - Art Type 1"] || "N/A"}`;
+} else if (fields.Talent_Type === "Arts Industry Professional") {
+  talentBox.className = "box arts-pro-box";
+  talentBox.innerText = `Profession: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Sports Industry Professional") {
+  talentBox.className = "box sports-pro-box";
+  talentBox.innerText = `Profession: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Referee") {
+  talentBox.innerText = "Profession: Referee";
+} else if (fields.Talent_Type === "Coach") {
+  talentBox.innerText = "Profession: Coach";
+} else {
+  talentBox.innerText = "N/A";
+}
+    rightDiv.appendChild(talentBox);
+
+    container.appendChild(bioDiv);
+    container.appendChild(rightDiv);
+    pageRoot.appendChild(container);
+  };
+  
+  
+  
+  
+  
+
+
+
+
+
+  const buildNotableAccomplishments = (pageRoot, accomplishments) => {
+    //if (accomplishments && accomplishments.trim() !== "" && accomplishments !== "\n") {
+      //const notableAccomplishments = document.createElement("div");
+      //notableAccomplishments.className = "notableAccomplishments";
+      //notableAccomplishments.innerHTML = "<h1>Notable Accomplishments</h1>";
+     // accomplishments.split("\n").forEach((line) => {
+        //if (line.trim() !== "") {
+          //const p = document.createElement("p");
+          //p.textContent = line.trim();
+        //  notableAccomplishments.appendChild(p);
+      //  }
+     // });
+    //  pageRoot.appendChild(notableAccomplishments);
+   // }
+  };
+
+  const buildVolunteerExperience = (pageRoot, experience) => {
+    //if (experience && experience.trim() !== "" && experience !== "\n") {
+    //  const volunteerExperience = document.createElement("div");
+    //  volunteerExperience.className = "notableAccomplishments";
+    //  volunteerExperience.innerHTML = "<h1>Volunteer Experience</h1>";
+    //  experience.split("\n").forEach((line) => {
+    //    if (line.trim() !== "") {
+     //     const p = document.createElement("p");
+      //    p.textContent = line.trim();
+     //     volunteerExperience.appendChild(p);
+    //    }
+   //   });
+   //   pageRoot.appendChild(volunteerExperience);
+  //  }
+  };
+
+  const buildImageGallery = (pageRoot, pictures) => {
+    if (pictures && pictures.length > 0) {
+      const gallery = document.createElement("div");
+      gallery.className = "gallery";
+      const galerryTitle = document.createElement("h1");
+      galerryTitle.innerText = "Gallery";
+      gallery.append(galerryTitle);
+
+      const galleryGrid = document.createElement("div");
+      galleryGrid.className = "gallery-grid";
+      pictures.slice(0, 4).forEach((picture) => {
+        const galleryItem = document.createElement("div");
+        galleryItem.className = "gallery-item";
+        const link = document.createElement("a");
+        link.href = picture.url;
+        const img = document.createElement("img");
+        img.src = picture.url;
+        link.appendChild(img);
+        galleryItem.appendChild(link);
+        galleryGrid.appendChild(galleryItem);
+      });
+      gallery.appendChild(galleryGrid);
+      pageRoot.appendChild(gallery);
+    }
+  };
+  
+  
+
+
+  
+  
+
+
+
+  const redirectToUserPage = (id) => {
+    const newUrl = `${window.location.origin}${window.location.pathname}?person=${id}`;
+    window.location.href = newUrl;
+  };
+const buildRelevantPersons = (pageRoot, records, selectedPerson) => {  
+
+const relevantPersonsDiv = document.createElement("div");
+relevantPersonsDiv.className = "relevant-persons";
+
+const relevantPersonsTitle = document.createElement("h1");
+relevantPersonsTitle.innerText = "Explore other Artists and Athletes";
+
+const relevantPersonsCards = document.createElement("div");
+relevantPersonsCards.className = "relevant-persons-cards";
+  
+  
+  
+
+
+  
+
+  
+  
+  
+  
+
+  
+  
+ 
+ 
+
+
+
+  // Set how many people to show (6 on mobile, 4 on desktop)
+const relevantPersonsCount = window.matchMedia("(max-width: 768px)").matches ? 6 : 4;
+  
+  
+
+
+
+let validRecords = records.filter(person =>
+  person.fields.ID !== selectedPerson.fields.ID &&
+  person.fields["Profile Picture"] &&
+  person.fields["Profile Picture"].length > 0
+);
+
+// Shuffle the array
+let shuffledRecords = shuffleArray([...validRecords]);
+
+// Take the first N people
+let relevantPersons = shuffledRecords.slice(0, relevantPersonsCount);
+
+// If there are no people to show, exit
+if (relevantPersons.length === 0) return;
+
+// Build the cards
+relevantPersons.forEach(person => {
+  const card = document.createElement("div");
+  card.className = "relevant-person-card";
+  card.addEventListener("click", () => {
+    redirectToUserPage(person.fields.ID);
+  });
+
+  const img = document.createElement("img");
+  img.src = person.fields["Profile Picture"][0].url;
+  img.alt = person.fields.Name || "No name available";
+  card.appendChild(img);
+
+  const detailsContainer = document.createElement("div");
+  detailsContainer.className = "details-container";
+  const name = document.createElement("h3");
+  name.textContent = person.fields.Name || "No name available";
+  detailsContainer.appendChild(name);
+
+  card.appendChild(detailsContainer);
+  relevantPersonsCards.appendChild(card);
+});
+
+relevantPersonsDiv.appendChild(relevantPersonsTitle);
+relevantPersonsDiv.appendChild(relevantPersonsCards);
+    pageRoot.appendChild(relevantPersonsDiv);
+  };
+
+  const setPageBackground = (url) => {
+    const page = document.getElementById("section-qD6IbLvKfa");
+    page.style.backgroundImage = `url("${url}")`;
+  };
+
+  const buildPage = (fields, pageSettings, templateType = "full") => {
+    const pageRoot = document.getElementById("pageRoot");
+    buildBackButton(pageRoot, pageSettings);
+    buildHero(pageRoot, fields);
+    if (templateType === "full" || templateType === "no-achievements") {
+      buildBioWithBoxes(pageRoot, fields);
+      if (templateType === "full") {
+        buildNotableAccomplishments(pageRoot, fields["Notable Accomplishments"]);
+      }
+    } else if (templateType === "no-bio") {
+      const specialLayoutContainer = document.createElement("div");
+      specialLayoutContainer.className = "special-layout-container";
+      const rightBoxesContainer = document.createElement("div");
+      rightBoxesContainer.className = "right-boxes-container";
+      buildBoxesOnly(rightBoxesContainer, fields);
+      specialLayoutContainer.appendChild(rightBoxesContainer);
+      if (fields["Notable Accomplishments"] && fields["Notable Accomplishments"].trim() !== "") {
+        const achievementsContainer = document.createElement("div");
+        achievementsContainer.className = "achievements-container";
+        buildNotableAccomplishmentsInside(achievementsContainer, fields["Notable Accomplishments"]);
+        specialLayoutContainer.appendChild(achievementsContainer);
+      }
+      pageRoot.appendChild(specialLayoutContainer);
+    }
+    buildVolunteerExperience(pageRoot, fields["Notable Volunteer Experience"]);
+    buildImageGallery(pageRoot, fields["Additional Pictures"]);
+    pageRoot.style.backgroundColor = "rgba(255, 255, 255, 1)";
+    pageRoot.style.boxShadow = "10px 22px 42px 3px rgba(0, 0, 0, 0.26)";
+    return pageRoot;
+  };
+
+  const buildBoxesOnly = (container, fields) => {
+    const countryBox = document.createElement("div");
+    countryBox.className = "box";
+if (fields.Talent_Type === "Athlete") {
+  talentBox.className = "box sport-box";
+  talentBox.innerText = `Sport: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Artist") {
+  talentBox.innerText = `Art Form: ${fields["06 - Art Type 1"] || "N/A"}`;
+} else if (fields.Talent_Type === "Arts Industry Professional") {
+  talentBox.className = "box arts-pro-box";
+  talentBox.innerText = `Profession: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Sports Industry Professional") {
+  talentBox.className = "box sports-pro-box";
+  talentBox.innerText = `Profession: ${fields["05 - Sport"] || "N/A"}`;
+} else if (fields.Talent_Type === "Referee") {
+  talentBox.innerText = "Profession: Referee";
+} else if (fields.Talent_Type === "Coach") {
+  talentBox.innerText = "Profession: Coach";
+} else {
+  talentBox.innerText = "N/A";
+}
+    container.appendChild(talentBox);
+  };
+
+  const buildNotableAccomplishmentsInside = (container, accomplishments) => {
+    if (accomplishments && accomplishments.trim() !== "" && accomplishments !== "\n") {
+      const title = document.createElement("h1");
+      title.innerText = "Notable Accomplishments";
+      container.appendChild(title);
+      accomplishments.split("\n").forEach((line) => {
+        if (line.trim() !== "") {
+          const p = document.createElement("p");
+          p.textContent = line.trim();
+          container.appendChild(p);
+        }
+      });
+    }
+  };
+
+  window.onload = async () => {
+    let records = await fetchAirtableData(peopleTableName, peopleTableView);
+    let adminRecords = await fetchAirtableData(adminTableName, adminTableView);
+    const pageSettings = adminRecords.find((r) => r.fields.Version === "latest").fields;
+    setPageBackground(pageSettings.PersonPageBackgroundImage[0].url);
+    const searchParams = new URLSearchParams(window.location.search);
+    const personId = parseInt(searchParams.get("person"));
+    const templateType = searchParams.get("template") || "full";
+    const person = records.find((r) => r.fields.ID === personId);
+    if (person == null || !person.fields) {
+      window.location.replace("https://theismaili.shorthandstories.com/notable-artists-and-athletes-discovery/index.html");
+    } else {
+      const pageRoot = buildPage(person.fields, pageSettings, templateType);
+      buildRelevantPersons(document.getElementById("pageRoot"), records, person);
+    }
+  };
+</script>
