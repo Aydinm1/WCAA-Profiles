@@ -1,6 +1,6 @@
 # WCAA Notable World Class Profiles (Athletes & Artists)
 
-This project showcases the **Notable World Class Athletes & Artists (WCAA)** profiles through a dynamic, story-driven interface.  
+This project showcases the **Notable World Class Athletes & Artists (WCAA)** profiles in the Ismaili Community.  
 It powers the experience published at:  
 👉 [Notable Artists & Athletes Discovery](https://theismaili.shorthandstories.com/notable-artists-and-athletes-discovery/)
 
